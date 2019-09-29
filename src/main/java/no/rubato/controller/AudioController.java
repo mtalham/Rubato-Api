@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/audio/")
@@ -21,13 +23,13 @@ public class AudioController {
 
     ///Upload Audio
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadImage(@RequestBody Audio audio){
-        Audio newAudio = audioService.saveAudio(audio);
+    public ResponseEntity<?> uploadAudio(@RequestBody Audio audio, Principal principal){
+        Audio newAudio = audioService.saveAudio(audio, principal.getName());
         return new ResponseEntity<>(newAudio, HttpStatus.OK);
     }
     //Delete Audio By Id
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteImage(@PathVariable("id") long id, Audio audio){
+    public ResponseEntity<?> deleteImage(@PathVariable("id") long id){
         Audio currentAudio = audioService.findBySearchId(id);
         if(currentAudio == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

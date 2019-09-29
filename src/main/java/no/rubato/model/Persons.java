@@ -11,218 +11,259 @@ import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "persons")
 public class Persons implements UserDetails {
 
-    public Persons(
-            @NotBlank(message = "Name is required") String name,
-            @Email(message = "Username should be an email") @NotEmpty(message = "Please Provide a valid Email Address")
-                    String username, String phone, @NotBlank(message = "Password is required")
-                    String password, String confirmPassword, String role, String vipps, String about, String price,
-            List<Images> images, List<Audio> audio, List<Video> video, List<Orders> orders
-    ) {
+  public Persons(
+      @NotBlank(message = "Name is required") String name,
+      @Email(message = "Username should be an email")
+          @NotEmpty(message = "Please Provide a valid Email Address")
+          String username,
+      String phone,
+      @NotBlank(message = "Password is required") String password,
+      String confirmPassword,
+      String role,
+      String vipps,
+      String about,
+      String price,
+      List<Images> images,
+      List<Audio> audio,
+      List<Video> video,
+      List<Orders> orders) {
 
-        this.name = name;
-        this.username = username;
-        this.phone = phone;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.role = role;
-        this.vipps = vipps;
-        this.about = about;
-        this.price = price;
-        this.images = images;
-        this.audio = audio;
-        this.video = video;
-        this.orders = orders;
-    }
+    this.name = name;
+    this.username = username;
+    this.phone = phone;
+    this.password = password;
+    this.confirmPassword = confirmPassword;
+    this.role = role;
+    this.vipps = vipps;
+    this.about = about;
+    this.price = price;
+    this.images = images;
+    this.audio = audio;
+    this.video = video;
+    this.orders = orders;
+  }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_persons")
-    private long idPerson;
-    @NotBlank(message = "Name is required")
-    @Column(name = "name")
-    private String name;
-    @Email(message = "Username should be an email")
-    @NotEmpty(message = "Please Provide a valid Email Address")
-    private String username;
-    @Column(name = "phone")
-    private String phone;
-    @NotBlank(message = "Password is required")
-    @Column(name = "password")
-    private String password;
-    @Transient
-    private String confirmPassword;
-    @Column(name = "role")
-    private String role;
-    @Column(name = "vipps")
-    private String vipps;
-    @Column(name = "about")
-    private String about;
-    @Column(name = "price")
-    private String price;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_persons")
+  private long idPerson;
 
-    @OneToMany(mappedBy = "persons", cascade = javax.persistence.CascadeType.ALL, orphanRemoval = true)
-    private List<Images> images = new ArrayList<>();
-    @OneToMany(mappedBy = "persons", cascade = javax.persistence.CascadeType.ALL, orphanRemoval = true)
-    private List<Audio> audio;
-    @OneToMany(mappedBy = "persons", fetch = FetchType.EAGER, cascade = CascadeType.REFRESH, orphanRemoval = true)
-    private List<Video> video = new ArrayList<>();
-    @ManyToMany(mappedBy = "persons", cascade = CascadeType.ALL)
-    private List<Orders> orders;
-    //OneToMany with Project
-    //@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "person", orphanRemoval = true)
-    //private List<Persons> persons = new ArrayList<>();
+  @NotBlank(message = "Name is required")
+  @Column(name = "name")
+  private String name;
 
-    public Persons() {
-    }
+  @Email(message = "Username should be an email")
+  @NotEmpty(message = "Please Provide a valid Email Address")
+  private String username;
 
-    ////Generate Getters and Setters
-    public long getIdPerson() {
-        return idPerson;
-    }
+  @Column(name = "phone")
+  private String phone;
 
-    public void setIdPerson(long idPerson) {
-        this.idPerson = idPerson;
-    }
+  @NotBlank(message = "Password is required")
+  @Column(name = "password")
+  private String password;
 
-    public String getName() {
-        return name;
-    }
+  @Transient private String confirmPassword;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @Column(name = "role")
+  private String role;
 
-    public String getUsername() {
-        return username;
-    }
+  @Column(name = "vipps")
+  private String vipps;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  @Column(name = "about")
+  private String about;
 
-    public String getPhone() {
-        return phone;
-    }
+  @Column(name = "price")
+  private String price;
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  @OneToMany(
+      mappedBy = "persons",
+      cascade = javax.persistence.CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Images> images = new ArrayList<>();
 
-    public String getPassword() {
-        return password;
-    }
+  @OneToMany(
+      mappedBy = "persons",
+      cascade = javax.persistence.CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Audio> audio = new ArrayList<>();
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  @OneToMany(
+      mappedBy = "persons",
+      fetch = FetchType.EAGER,
+      cascade = CascadeType.REFRESH,
+      orphanRemoval = true)
+  private List<Video> video = new ArrayList<>();
 
-    public String getRole() {
-        return role;
-    }
+  @ManyToMany(mappedBy = "persons", cascade = CascadeType.ALL)
+  private List<Orders> orders;
 
-    public void setRole(String role) {
-        this.role = role;
-    }
+  public Persons() {}
 
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
+  private PersonDto toDto(Persons person) {
+    PersonDto personDto = new PersonDto();
+    personDto.setName(person.getName());
+    personDto.setUsername(person.getUsername());
+    personDto.setAbout(person.getAbout());
+    personDto.setRole(person.getRole());
+    personDto.setPhone(person.getPhone());
+    personDto.setPersonId(person.getIdPerson());
+    return personDto;
+  }
 
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
+  public List<PersonDto> toDtos(List<Persons> persons) {
+    return persons.stream().map(this::toDto).collect(Collectors.toList());
+  }
 
-    public String getVipps() {
-        return vipps;
-    }
+  //// Generate Getters and Setters
+  public long getIdPerson() {
+    return idPerson;
+  }
 
-    public void setVipps(String vipps) {
-        this.vipps = vipps;
-    }
+  public void setIdPerson(long idPerson) {
+    this.idPerson = idPerson;
+  }
 
-    public String getAbout() {
-        return about;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setAbout(String about) {
-        this.about = about;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
+  public String getUsername() {
+    return username;
+  }
 
-    public String getPrice() {
-        return price;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
+  public String getPhone() {
+    return phone;
+  }
 
-    public List<Images> getImages() {
-        return images;
-    }
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
 
-    public void setImages(List<Images> images) {
-        this.images = images;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public List<Audio> getAudio() {
-        return audio;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setAudio(List<Audio> audio) {
-        this.audio = audio;
-    }
+  public String getRole() {
+    return role;
+  }
 
-    public List<Video> getVideo() {
-        return video;
-    }
+  public void setRole(String role) {
+    this.role = role;
+  }
 
-    public void setVideo(List<Video> video) {
-        this.video = video;
-    }
+  public String getConfirmPassword() {
+    return confirmPassword;
+  }
 
-    public List<Orders> getOrders() {
-        return orders;
-    }
+  public void setConfirmPassword(String confirmPassword) {
+    this.confirmPassword = confirmPassword;
+  }
 
-    public void setOrders(List<Orders> orders) {
-        this.orders = orders;
-    }
+  public String getVipps() {
+    return vipps;
+  }
 
-    //UserDetails interface methods
+  public void setVipps(String vipps) {
+    this.vipps = vipps;
+  }
 
-    @Override
-    @JsonIgnore
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
+  public String getAbout() {
+    return about;
+  }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+  public void setAbout(String about) {
+    this.about = about;
+  }
 
-    @Override
-    @JsonIgnore
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+  public String getPrice() {
+    return price;
+  }
 
-    @Override
-    @JsonIgnore
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+  public void setPrice(String price) {
+    this.price = price;
+  }
 
-    @Override
-    @JsonIgnore
-    public boolean isEnabled() {
-        return true;
-    }
+  public List<Images> getImages() {
+    return images;
+  }
+
+  public void setImages(List<Images> images) {
+    this.images = images;
+  }
+
+  public List<Audio> getAudio() {
+    return audio;
+  }
+
+  public void setAudio(List<Audio> audio) {
+    this.audio = audio;
+  }
+
+  public List<Video> getVideo() {
+    return video;
+  }
+
+  public void setVideo(List<Video> video) {
+    this.video = video;
+  }
+
+  public List<Orders> getOrders() {
+    return orders;
+  }
+
+  public void setOrders(List<Orders> orders) {
+    this.orders = orders;
+  }
+
+  // UserDetails interface methods
+
+  @Override
+  @JsonIgnore
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return null;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  @JsonIgnore
+  public boolean isEnabled() {
+    return true;
+  }
 }

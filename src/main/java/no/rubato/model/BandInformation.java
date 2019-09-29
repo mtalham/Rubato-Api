@@ -3,44 +3,47 @@ package no.rubato.model;
 import javax.validation.constraints.NotBlank;
 
 public class BandInformation {
-    @NotBlank(message = "Name is required")
-    private String name;
-    @NotBlank(message = "About is required")
-    private String about;
-    @NotBlank(message = "Phone is required")
-    private String phone;
-    @NotBlank(message = "Price is required")
-    private String price;
+  @NotBlank(message = "Name is required")
+  private String name;
 
-    public String getName() {
-        return name;
-    }
+  @NotBlank(message = "About is required")
+  private String about;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @NotBlank(message = "Phone is required")
+  private String phone;
 
-    public String getAbout() {
-        return about;
-    }
+  @NotBlank(message = "Price is required")
+  private String price;
 
-    public void setAbout(String about) {
-        this.about = about;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public String getPhone() {
-        return phone;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+  public String getAbout() {
+    return about;
+  }
 
-    public String getPrice() {
-        return price;
-    }
+  public void setAbout(String about) {
+    this.about = about;
+  }
 
-    public void setPrice(String price) {
-        this.price = price;
-    }
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getPrice() {
+    return price;
+  }
+
+  public void setPrice(String price) {
+    this.price = price;
+  }
 }

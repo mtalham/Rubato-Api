@@ -1,9 +1,8 @@
 package no.rubato.model;
 
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 public class Audio {
@@ -15,10 +14,12 @@ public class Audio {
     private String name;
     @Column(name = "path")
     private String path;
-    @Column(name = "type")
-    private String type;
+    @Column(name = "description")
+    private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_persons", nullable = false)
+    @JsonIgnore
     private Persons persons;
 
     public long getIdAudio() {
@@ -45,12 +46,12 @@ public class Audio {
         this.path = path;
     }
 
-    public String getType() {
-        return type;
+    public String getDescription() {
+        return description;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Persons getPersons() {
