@@ -93,6 +93,12 @@ public class Persons implements UserDetails {
       mappedBy = "persons",
       cascade = javax.persistence.CascadeType.ALL,
       orphanRemoval = true)
+  private List<Images> bookings = new ArrayList<>();
+
+  @OneToMany(
+      mappedBy = "persons",
+      cascade = javax.persistence.CascadeType.ALL,
+      orphanRemoval = true)
   private List<Audio> audio = new ArrayList<>();
 
   @OneToMany(
@@ -120,6 +126,14 @@ public class Persons implements UserDetails {
 
   public List<PersonDto> toDtos(List<Persons> persons) {
     return persons.stream().map(this::toDto).collect(Collectors.toList());
+  }
+
+  public List<Images> getBookings() {
+    return bookings;
+  }
+
+  public void setBookings(List<Images> bookings) {
+    this.bookings = bookings;
   }
 
   //// Generate Getters and Setters

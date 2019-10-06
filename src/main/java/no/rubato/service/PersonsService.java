@@ -5,19 +5,23 @@ import no.rubato.model.BandInformation;
 import no.rubato.model.PersonDto;
 import no.rubato.model.Persons;
 import no.rubato.repository.PersonsRepository;
+import org.simmetrics.StringMetric;
+import org.simmetrics.metrics.StringMetrics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service("personsService")
 public class PersonsService {
 
+  private final double NAME_FUZZY_LEVEL = 0.75;
   private final PersonsRepository personsRepository;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+  private StringMetric stringMatcher = StringMetrics.smithWatermanGotoh();
 
   @Autowired
   public PersonsService(
@@ -26,18 +30,39 @@ public class PersonsService {
     this.personsRepository = personsRepository;
   }
 
-  public List<Persons> findBySearchId(String searchId) {
-    return personsRepository.findAll().stream()
-        .filter(Objects::nonNull)
-        .filter(
-            persons ->
-                persons.getUsername().equals(searchId)
-                    || persons.getPhone().equals(searchId)
-                    || persons.getVipps().equals(searchId)
-                    || persons.getAbout().equals(searchId)
-                    || persons.getName().equals(searchId)
-                    || persons.getRole().equals(searchId))
-        .collect(Collectors.toList());
+  public List<PersonDto> searchUsers(String searchTerm) {
+    Persons persons = new Persons();
+    List<Persons> allPersons =
+        personsRepository.findAll().stream()
+            .filter(
+                person ->
+                    byName(searchTerm, person)
+                        || byUsername(searchTerm, person)
+                        || byRole(searchTerm, person)
+                        || byPhone(searchTerm, person))
+            .collect(Collectors.toList());
+
+    return persons.toDtos(allPersons);
+  }
+
+  private boolean byName(String searchTerm, Persons person) {
+    return stringMatcher.compare(person.getName().toLowerCase(), searchTerm.toLowerCase())
+        >= NAME_FUZZY_LEVEL;
+  }
+
+  private boolean byUsername(String searchTerm, Persons person) {
+    return stringMatcher.compare(person.getUsername().toLowerCase(), searchTerm.toLowerCase())
+        >= NAME_FUZZY_LEVEL;
+  }
+
+  private boolean byPhone(String searchTerm, Persons person) {
+    return stringMatcher.compare(person.getPhone().toLowerCase(), searchTerm.toLowerCase())
+        >= NAME_FUZZY_LEVEL;
+  }
+
+  private boolean byRole(String searchTerm, Persons person) {
+    return stringMatcher.compare(person.getRole().toLowerCase(), searchTerm.toLowerCase())
+        >= NAME_FUZZY_LEVEL;
   }
 
   public Persons findById(long id) {

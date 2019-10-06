@@ -1,6 +1,7 @@
 package no.rubato.controller;
 
 import no.rubato.model.BandInformation;
+import no.rubato.model.PersonDto;
 import no.rubato.model.Persons;
 import no.rubato.service.PersonsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,8 @@ public class PersonController {
 
   /// Search By Email, Phone, Role, Orders For Admin Use Only
   @RequestMapping(value = "/search/{searchId}", method = RequestMethod.GET)
-  public List<Persons> searchUsers(@PathVariable String searchId) {
-    return personsService.findBySearchId(searchId);
+  public List<PersonDto> searchUsers(@PathVariable String searchId) {
+    return personsService.searchUsers(searchId);
   }
   // Search By Id
   @RequestMapping(value = "/searchById/{id}", method = RequestMethod.GET)
