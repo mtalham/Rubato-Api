@@ -90,10 +90,10 @@ public class Persons implements UserDetails {
   private List<Images> images = new ArrayList<>();
 
   @OneToMany(
-      mappedBy = "persons",
+      mappedBy = "band",
       cascade = javax.persistence.CascadeType.ALL,
       orphanRemoval = true)
-  private List<Images> bookings = new ArrayList<>();
+  private List<Booking> bookings = new ArrayList<>();
 
   @OneToMany(
       mappedBy = "persons",
@@ -128,11 +128,11 @@ public class Persons implements UserDetails {
     return persons.stream().map(this::toDto).collect(Collectors.toList());
   }
 
-  public List<Images> getBookings() {
+  public List<Booking> getBookings() {
     return bookings;
   }
 
-  public void setBookings(List<Images> bookings) {
+  public void setBookings(List<Booking> bookings) {
     this.bookings = bookings;
   }
 

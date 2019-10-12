@@ -1,5 +1,6 @@
 package no.rubato.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
@@ -11,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "booking")
@@ -21,8 +22,10 @@ public class Booking {
     @Column(name = "id")
     private long id;
 
-    private LocalDate fromDate;
-    private LocalDate toDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private Date fromDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private Date toDate;
 
     @Column(name = "user_id")
     private long userId;
@@ -49,19 +52,19 @@ public class Booking {
         this.id = id;
     }
 
-    public LocalDate getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public void setFromDate(LocalDate fromDate) {
+    public void setFromDate(Date fromDate) {
         this.fromDate = fromDate;
     }
 
-    public LocalDate getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 
-    public void setToDate(LocalDate toDate) {
+    public void setToDate(Date toDate) {
         this.toDate = toDate;
     }
 
@@ -72,5 +75,4 @@ public class Booking {
     public void setBand(Persons band) {
         this.band = band;
     }
-
 }

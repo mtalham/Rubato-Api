@@ -36,33 +36,18 @@ public class PersonsService {
         personsRepository.findAll().stream()
             .filter(
                 person ->
-                    byName(searchTerm, person)
-                        || byUsername(searchTerm, person)
-                        || byRole(searchTerm, person)
-                        || byPhone(searchTerm, person))
+                    bySearchTerm(searchTerm, person.getName())
+                        || bySearchTerm(searchTerm, person.getUsername())
+                        || bySearchTerm(searchTerm, person.getRole())
+                        || bySearchTerm(searchTerm, person.getPhone()))
             .collect(Collectors.toList());
 
     return persons.toDtos(allPersons);
   }
 
-  private boolean byName(String searchTerm, Persons person) {
-    return stringMatcher.compare(person.getName().toLowerCase(), searchTerm.toLowerCase())
-        >= NAME_FUZZY_LEVEL;
-  }
-
-  private boolean byUsername(String searchTerm, Persons person) {
-    return stringMatcher.compare(person.getUsername().toLowerCase(), searchTerm.toLowerCase())
-        >= NAME_FUZZY_LEVEL;
-  }
-
-  private boolean byPhone(String searchTerm, Persons person) {
-    return stringMatcher.compare(person.getPhone().toLowerCase(), searchTerm.toLowerCase())
-        >= NAME_FUZZY_LEVEL;
-  }
-
-  private boolean byRole(String searchTerm, Persons person) {
-    return stringMatcher.compare(person.getRole().toLowerCase(), searchTerm.toLowerCase())
-        >= NAME_FUZZY_LEVEL;
+  private boolean bySearchTerm(String searchTerm, String personField) {
+    return stringMatcher.compare(personField.toLowerCase(), searchTerm.toLowerCase())
+            >= NAME_FUZZY_LEVEL;
   }
 
   public Persons findById(long id) {
