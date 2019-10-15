@@ -17,38 +17,6 @@ import java.util.stream.Collectors;
 @Table(name = "persons")
 public class Persons implements UserDetails {
 
-  public Persons(
-      @NotBlank(message = "Name is required") String name,
-      @Email(message = "Username should be an email")
-          @NotEmpty(message = "Please Provide a valid Email Address")
-          String username,
-      String phone,
-      @NotBlank(message = "Password is required") String password,
-      String confirmPassword,
-      String role,
-      String vipps,
-      String about,
-      String price,
-      List<Images> images,
-      List<Audio> audio,
-      List<Video> video,
-      List<Orders> orders) {
-
-    this.name = name;
-    this.username = username;
-    this.phone = phone;
-    this.password = password;
-    this.confirmPassword = confirmPassword;
-    this.role = role;
-    this.vipps = vipps;
-    this.about = about;
-    this.price = price;
-    this.images = images;
-    this.audio = audio;
-    this.video = video;
-    this.orders = orders;
-  }
-
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "id_persons")
@@ -60,6 +28,7 @@ public class Persons implements UserDetails {
 
   @Email(message = "Username should be an email")
   @NotEmpty(message = "Please Provide a valid Email Address")
+  @Column(name = "username", unique = true)
   private String username;
 
   @Column(name = "phone")

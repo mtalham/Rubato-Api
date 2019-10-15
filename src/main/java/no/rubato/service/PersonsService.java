@@ -56,6 +56,10 @@ public class PersonsService {
 
   // Save
   public Persons savePerson(Persons persons) {
+    Persons existingPerson = personsRepository.findByUsername(persons.getUsername());
+    if (existingPerson != null) {
+      throw new UsernameAlreadyExistsException("Username " + persons.getUsername() + " already exists");
+    }
     try {
       persons.setPassword(bCryptPasswordEncoder.encode(persons.getPassword()));
       // username (email) has to be unique (throws exception)
